@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Glass UI</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --glass: rgba(255,255,255,0.055);
+  --glass-border: rgba(255,255,255,0.10);
+  --glass-strong: rgba(255,255,255,0.10);
+  --text: rgba(255,255,255,0.92);
+  --text-muted: rgba(255,255,255,0.42);
+  --text-dim: rgba(255,255,255,0.22);
+  --accent: #c4b5fd;
+  --accent2: #93c5fd;
+  --green: #6edda8;
+  --red: #f87171;
+  --radius: 18px;
+  --radius-lg: 26px;
+  --ease-spring: cubic-bezier(0.34,1.4,0.64,1);
+  --ease-out: cubic-bezier(0.22,1,0.36,1);
+}
+
+body {
+  min-height: 100vh;
+  background: #080614;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+  position: relative;
+  color: var(--text);
+}
+
+/* ── MOBILE ADAPTIVE ── */
+@media (max-width: 480px) {
+  .screen-header { padding: 48px 16px 14px; }
+  .screen-header h1 { font-size: 20px; }
+
+  .detail-topbar { padding: 48px 14px 12px; }
+  .detail-topbar-title { font-size: 16px; }
+
+  .detail-photo-wrap { width: 130px; height: 130px; border-radius: 14px; }
+  .detail-hero { gap: 12px; }
+  .detail-price { font-size: 15px; }
+  .detail-side { gap: 7px; }
+
+  .rec-card { margin-bottom: 12px; }
+  .photo-slider { height: 180px; }
+  .rec-title { font-size: 15px; }
+  .rec-info { padding: 12px; }
+  .rec-price { font-size: 16px; }
+
+  .services-grid { gap: 6px; }
+  .service-chip { font-size: 12px; padding: 7px 13px; }
+
+  .big-btn { padding: 14px; font-size: 14px; }
+
+  .navbar-wrap { bottom: 16px; width: calc(100% - 24px); }
+  .navbar { padding: 6px; }
+  .nav-btn { padding: 8px 6px; }
+  .nav-label { font-size: 10px; }
+  .nav-icon svg { width: 20px; height: 20px; }
+
+  .modal-box { padding: 28px 20px; }
+  .modal-title { font-size: 20px; }
+
+  .order-detail-sheet { padding: 10px 16px 36px; border-radius: 22px 22px 0 0; }
+
+  .profile-avatar { width: 68px; height: 68px; font-size: 26px; }
+  .profile-name { font-size: 19px; }
+
+  .hours-slider-wrap { gap: 8px; }
+  .hours-val { font-size: 16px; }
+
+  .total-val { font-size: 19px; }
+
+  .tab-btn { font-size: 12px; padding: 8px 10px; }
+
+  .scroll-area { padding-bottom: 110px; }
+
+  #screen-onboarding h1 { font-size: 22px; }
+  #screen-onboarding p { font-size: 14px; }
+}
+
+@media (max-width: 360px) {
+  .detail-photo-wrap { width: 110px; height: 110px; }
+  .detail-price { font-size: 14px; }
+  .photo-slider { height: 160px; }
+  .navbar-wrap { width: calc(100% - 16px); }
+  .rec-title { font-size: 14px; }
+  .big-btn { font-size: 13px; padding: 13px; }
+  .nav-label { display: none; }
+  .nav-btn { padding: 10px 8px; }
+}
+
+/* ── AMBIENT CANVAS ── */
+.blobs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(110px); opacity: 0;
+  animation: blobIn 1.8s var(--ease-out) forwards;
+}
+@keyframes blobIn { to { opacity: 0.28; } }
+.b1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, #6d28d9, #4c1d95);
+  top: -180px; left: -140px;
+  animation: blobIn 1.8s var(--ease-out) forwards, f1 14s ease-in-out 1.8s infinite;
+}
+.b2 {
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, #1d4ed8, #1e3a8a);
+  top: 15%; right: -100px;
+  animation: blobIn 2s var(--ease-out) 0.3s forwards, f2 18s ease-in-out 2s infinite;
+}
+.b3 {
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, #065f46, #064e3b);
+  bottom: 0; left: -60px;
+  animation: blobIn 2.2s var(--ease-out) 0.6s forwards, f3 16s ease-in-out 2.2s infinite;
+}
+.b4 {
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, #9d174d, #831843);
+  top: 45%; right: 10%;
+  animation: blobIn 2s var(--ease-out) 0.9s forwards, f1 20s ease-in-out 2s infinite reverse;
+}
+.b5 {
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, #0e7490, #164e63);
+  top: 60%; left: 40%;
+  animation: blobIn 2.4s var(--ease-out) 1.2s forwards, f2 22s ease-in-out 2.4s infinite;
+}
+@keyframes f1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(40px,50px) scale(1.08)} }
+@keyframes f2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-35px,40px) scale(1.05)} }
+@keyframes f3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(50px,-30px) scale(1.06)} }
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.028;
+}
+
+/* ── SCREENS ── */
+.screen {
+  position: fixed; inset: 0; z-index: 10;
+  display: none; flex-direction: column; overflow: hidden;
+}
+.screen.active {
+  display: flex;
+  animation: screenIn 0.45s var(--ease-out) both;
+}
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* SCROLLABLE CONTENT AREA */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 16px 140px;
+  scrollbar-width: none;
+}
+.scroll-area::-webkit-scrollbar { display: none; }
+
+/* ── GLASS CARD ── */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.08) inset,
+    0 -1px 0 rgba(0,0,0,0.15) inset,
+    0 12px 40px rgba(0,0,0,0.35),
+    0 2px 8px rgba(0,0,0,0.2);
+  transition: box-shadow 0.3s var(--ease-out), border-color 0.3s;
+}
+.glass-card:hover {
+  border-color: rgba(255,255,255,0.16);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.1) inset,
+    0 -1px 0 rgba(0,0,0,0.15) inset,
+    0 20px 60px rgba(0,0,0,0.45),
+    0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* TOP TAB SWITCHER */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  padding: 4px;
+  position: relative;
+}
+.tab-bar .tab-slider {
+  position: absolute;
+  top: 4px;
+  height: calc(100% - 8px);
+  background: rgba(255,255,255,0.14);
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: left 0.35s cubic-bezier(0.34,1.4,0.64,1), width 0.35s cubic-bezier(0.34,1.4,0.64,1);
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.tab-btn {
+  flex: 1;
+  padding: 9px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s;
+  white-space: nowrap;
+}
+.tab-btn.active { color: #fff; }
+
+/* ── SCREEN HEADER ── */
+.screen-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 58px 20px 18px;
+  flex-shrink: 0;
+  position: relative;
+}
+.screen-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 20px; right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+}
+.screen-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px; font-weight: 700;
+  color: #fff; flex: 1;
+  letter-spacing: -0.02em;
+}
+.back-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  backdrop-filter: blur(10px);
+}
+.back-btn svg { stroke: #fff; width: 18px; height: 18px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── RECOMMENDATION CARD ── */
+.rec-card {
+  margin-bottom: 14px;
+  border-radius: var(--radius-lg);
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.4s var(--ease-spring), box-shadow 0.4s var(--ease-out);
+  animation: cardIn 0.5s var(--ease-out) both;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 148px;
+}
+.rec-card:nth-child(1) { animation-delay: 0.05s; }
+.rec-card:nth-child(2) { animation-delay: 0.12s; }
+.rec-card:nth-child(3) { animation-delay: 0.19s; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rec-card:active { transform: scale(0.975); }
+.rec-card:hover { transform: translateY(-2px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+/* фото-блок слева */
+.photo-slider {
+  position: relative;
+  width: 140px;
+  min-width: 140px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+.photo-slider img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.photo-slider img.active { opacity: 1; }
+.photo-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 26px; height: 26px;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.photo-nav:hover { background: rgba(0,0,0,0.7); }
+.photo-nav svg { stroke: #fff; width: 12px; height: 12px; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.photo-nav.prev { left: 6px; }
+.photo-nav.next { right: 6px; }
+.photo-dots {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  z-index: 5;
+}
+.photo-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  transition: background 0.2s, transform 0.2s;
+}
+.photo-dot.active { background: #fff; transform: scale(1.3); }
+
+/* инфо-блок справа */
+.rec-info {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 14px 12px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-left: none;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+}
+.rec-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rec-desc {
+  font-size: 12px; color: var(--text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+.rec-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.rec-rating {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 12px; font-weight: 600; color: #fbbf24;
+}
+.rec-rating svg { width: 12px; height: 12px; fill: #fbbf24; stroke: none; }
+.rec-reviews-count {
+  font-size: 11px; color: var(--text-dim);
+}
+.rec-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+.rec-price {
+  font-size: 15px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.rec-badge {
+  font-size: 10px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(167,139,250,0.15);
+  color: var(--accent);
+  border: 1px solid rgba(167,139,250,0.3);
+}
+
+@media (max-width: 480px) {
+  .photo-slider {
+    width: 120px;
+    min-width: 120px;
+  }
+  .rec-title { font-size: 14px; }
+  .rec-desc { font-size: 11px; -webkit-line-clamp: 2; }
+}
+@media (max-width: 360px) {
+  .photo-slider {
+    width: 100px;
+    min-width: 100px;
+  }
+}
+
+/* ── DETAIL SCREEN ── */
+.detail-topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 56px 16px 14px;
+  flex-shrink: 0;
+  position: relative;
+}
+.detail-topbar::after {
+  content: '';
+  position: absolute; bottom: 0; left: 16px; right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+}
+.detail-topbar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 700;
+  color: #fff; letter-spacing: -0.02em;
+  flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── MARKETPLACE LAYOUT ── */
+.detail-marketplace {
+  display: grid;
+  grid-template-columns: 56px 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 12px;
+  align-items: start;
+  padding: 0;
+}
+
+/* миниатюры */
+.detail-thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  grid-column: 1;
+  grid-row: 1;
+}
+.detail-thumb {
+  width: 52px; height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, opacity 0.2s;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.04);
+}
+.detail-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.detail-thumb.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(196,181,253,0.4);
+}
+.detail-thumb:not(.active) { opacity: 0.55; }
+.detail-thumb:hover:not(.active) { opacity: 0.85; }
+
+/* большое фото */
+.detail-main-photo {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06) inset;
+}
+.detail-main-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+.detail-main-photo img.active { opacity: 1; }
+.detail-main-photo .photo-nav {
+  width: 28px; height: 28px;
+  top: 50%; transform: translateY(-50%);
+}
+.detail-main-photo .photo-nav svg { width: 12px; height: 12px; }
+.detail-main-photo .photo-dots { bottom: 8px; }
+.detail-main-photo .photo-dot { width: 5px; height: 5px; }
+
+/* инфо справа */
+.detail-side {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.detail-price {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 800;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.detail-desc-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.detail-total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.detail-total-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* мобайл — стек */
+@media (max-width: 600px) {
+  .detail-marketplace {
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .detail-main-photo {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .detail-thumbs {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+  .detail-side {
+    grid-column: 1 / 3;
+    grid-row: 2;
+  }
+}
+
+.section-label {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.detail-desc-text { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+/* SERVICES */
+.services-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.service-chip {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.service-chip.selected {
+  background: rgba(167,139,250,0.2);
+  border-color: rgba(167,139,250,0.5);
+  color: var(--accent);
+}
+
+/* ── BIG BUTTON ── */
+.big-btn {
+  width: 100%; padding: 16px;
+  border-radius: 999px; border: none;
+  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 50%, #2563eb 100%);
+  background-size: 200% 200%;
+  color: #fff; font-family: 'Inter', sans-serif;
+  font-size: 15px; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.03em;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 8px 28px rgba(109,40,217,0.45),
+    0 2px 8px rgba(0,0,0,0.3);
+  transition:
+    transform 0.3s var(--ease-spring),
+    box-shadow 0.3s var(--ease-out),
+    background-position 0.5s var(--ease-out);
+  position: relative; overflow: hidden;
+}
+.big-btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.big-btn:hover {
+  transform: translateY(-2px);
+  background-position: right center;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.12) inset,
+    0 16px 40px rgba(109,40,217,0.55),
+    0 4px 12px rgba(0,0,0,0.35);
+}
+.big-btn:active { transform: scale(0.975); }
+.big-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+/* ORDER SCREEN */
+.order-field {
+  margin-bottom: 14px;
+  padding: 16px;
+  border-radius: var(--radius);
+}
+.order-field label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 8px;
+}
+.order-field .field-value {
+  font-size: 15px;
+  color: var(--text);
+}
+.order-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 15px;
+  font-family: inherit;
+  caret-color: var(--accent);
+}
+.order-input::placeholder { color: rgba(255,255,255,0.25); }
+
+/* HOURS SLIDER */
+.hours-slider-wrap { display: flex; align-items: center; gap: 14px; }
+
+.hours-slider-track {
+  flex: 1;
+  position: relative;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.hours-slider {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 100%;
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  background: transparent;
+  margin: 0;
+  z-index: 2;
+}
+
+/* невидимая область клика поверх */
+.hours-slider::-webkit-slider-runnable-track {
+  height: 36px;
+  border-radius: 999px;
+  background: transparent;
+}
+.hours-slider::-moz-range-track {
+  height: 36px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.hours-slider-bg {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%; transform: translateY(-50%);
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.06);
+  pointer-events: none;
+  overflow: hidden;
+}
+.hours-slider-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6366f1, #3b82f6, #06b6d4);
+  transition: width 0.05s linear;
+  pointer-events: none;
+}
+
+.hours-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  cursor: grab;
+}
+.hours-slider::-moz-range-thumb {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: grab;
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 2px 12px rgba(0,0,0,0.55),
+    0 0 0 2px rgba(255,255,255,0.18);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: left 0.08s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.15s ease;
+  z-index: 1;
+  will-change: left;
+}
+.hours-slider-track:has(.hours-slider:active) .slider-thumb {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.65),
+    0 0 0 3px rgba(255,255,255,0.28);
+}
+
+.hours-val {
+  font-size: 17px; font-weight: 700; color: var(--accent);
+  min-width: 34px; text-align: center;
+}
+
+/* TOTAL ROW */
+.total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+.total-label { font-size: 14px; color: var(--text-muted); }
+.total-val {
+  font-size: 22px; font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── HOURS SLIDER TRACK (убираем дефолт) ── */
+
+/* ── SUCCESS MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(12px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: linear-gradient(160deg, rgba(30,20,70,0.97), rgba(15,20,50,0.97));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  text-align: center;
+  max-width: 340px; width: 100%;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06) inset,
+    0 32px 80px rgba(0,0,0,0.6),
+    0 0 60px rgba(109,40,217,0.15);
+  animation: pop 0.5s cubic-bezier(0.34,1.4,0.64,1);
+  backdrop-filter: blur(40px);
+}
+@keyframes pop {
+  from { transform: scale(0.75) translateY(20px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px; font-weight: 700;
+  color: #fff; margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.modal-icon {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(124,77,255,0.3), rgba(68,138,255,0.3));
+  border: 2px solid rgba(167,139,250,0.4);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 34px;
+}
+.modal-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.modal-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+
+/* ── PROFILE ── */
+.profile-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c4dff, #448aff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; font-weight: 700; color: #fff;
+  border: 3px solid rgba(255,255,255,0.2);
+  margin: 0 auto 14px;
+  box-shadow: 0 8px 24px rgba(124,77,255,0.4);
+}
+.profile-name {
+  text-align: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 700;
+  margin-bottom: 4px; letter-spacing: -0.02em;
+}
+.profile-nick { text-align: center; font-size: 14px; color: var(--accent); margin-bottom: 24px; }
+.profile-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px;
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.profile-row:hover { background: rgba(255,255,255,0.05); }
+.profile-row-icon {
+  width: 36px; height: 36px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.profile-row-icon svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.profile-row-text { flex: 1; }
+.profile-row-label { font-size: 15px; font-weight: 500; color: #fff; }
+.profile-row-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.profile-row-arrow svg { width: 16px; height: 16px; stroke: var(--text-dim); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ORDERS LIST */
+.order-item {
+  padding: 16px;
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.order-item:active { transform: scale(0.99); }
+.order-item-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.order-item-title { font-size: 15px; font-weight: 600; color: #fff; }
+.order-status {
+  font-size: 11px; font-weight: 500; padding: 3px 10px;
+  border-radius: 999px;
+}
+.status-done { background: rgba(110,221,168,0.15); color: var(--green); border: 1px solid rgba(110,221,168,0.3); }
+.status-progress { background: rgba(96,165,250,0.15); color: var(--accent2); border: 1px solid rgba(96,165,250,0.3); }
+.status-pending { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.status-cancelled { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.28); }
+.order-item-info { font-size: 13px; color: var(--text-muted); }
+
+/* ORDER DETAIL MODAL */
+.order-detail-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(10px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.order-detail-panel.show { display: flex; }
+.order-detail-sheet {
+  background: linear-gradient(160deg, rgba(26,20,70,0.98), rgba(13,31,60,0.98));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 28px 28px 0 0;
+  padding: 12px 20px 40px;
+  width: 100%;
+  max-width: 480px;
+  animation: slideup 0.35s cubic-bezier(0.34,1.2,0.64,1);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+@keyframes slideup { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.sheet-handle {
+  width: 40px; height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.2);
+  margin: 0 auto 20px;
+}
+.detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.detail-row:last-child { border-bottom: none; }
+.detail-row-label { font-size: 13px; color: var(--text-muted); }
+.detail-row-val { font-size: 13px; font-weight: 500; color: var(--text); text-align: right; max-width: 60%; }
+.phone-link { color: var(--accent2); text-decoration: none; }
+
+/* ── ORDER DETAIL SHEET ── */
+.order-detail-sheet {
+  background: linear-gradient(160deg, rgba(20,14,60,0.98), rgba(10,18,50,0.98));
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 28px 28px 0 0;
+  padding: 12px 20px 44px;
+  width: 100%; max-width: 480px;
+  animation: slideup 0.4s var(--ease-spring);
+  max-height: 82vh; overflow-y: auto;
+  box-shadow: 0 -20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(109,40,217,0.08);
+  backdrop-filter: blur(40px);
+}
+@keyframes slideup {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* ── NAVBAR ── */
+.navbar-wrap {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: calc(100% - 32px);
+  max-width: 440px;
+}
+.navbar {
+  background: rgba(12,8,32,0.75);
+  backdrop-filter: blur(40px) saturate(220%);
+  -webkit-backdrop-filter: blur(40px) saturate(220%);
+  border: 1px solid rgba(255,255,255,0.11);
+  border-radius: 999px; padding: 8px;
+  display: flex; align-items: center; position: relative;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06) inset,
+    0 24px 70px rgba(0,0,0,0.7),
+    0 4px 16px rgba(0,0,0,0.4),
+    0 0 40px rgba(109,40,217,0.1);
+  animation: navIn 0.7s var(--ease-spring) 0.4s both;
+}
+@keyframes navIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.nav-slider {
+  position: absolute; top: 8px;
+  height: calc(100% - 16px);
+  background: linear-gradient(135deg, rgba(109,40,217,0.5), rgba(37,99,235,0.4));
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    0 4px 16px rgba(109,40,217,0.35);
+  transition: left 0.45s var(--ease-spring), width 0.45s var(--ease-spring);
+  pointer-events: none;
+}
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  z-index: 2;
+  outline: none;
+}
+.nav-btn:hover { transform: scale(1.04); }
+.nav-btn:active { transform: scale(0.97); }
+.nav-icon { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+.nav-icon svg { width: 22px; height: 22px; stroke-width: 1.8; transition: stroke 0.3s, filter 0.3s; stroke: rgba(255,255,255,0.38); fill: none; }
+.nav-btn.active .nav-icon svg { stroke: #fff; filter: drop-shadow(0 0 8px rgba(196,181,253,0.9)); }
+.nav-label { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.32); transition: color 0.3s; white-space: nowrap; }
+.nav-btn.active .nav-label { color: #fff; }
+
+/* ── ONBOARDING ── */
+#screen-onboarding {
+  background: radial-gradient(ellipse at 30% 20%, rgba(109,40,217,0.18) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 80%, rgba(37,99,235,0.15) 0%, transparent 55%);
+}
+#screen-onboarding h1 {
+  font-family: 'Syne', sans-serif;
+  letter-spacing: -0.03em;
+  animation: fadeUp 0.7s var(--ease-out) 0.2s both;
+}
+#screen-onboarding p {
+  animation: fadeUp 0.7s var(--ease-out) 0.35s both;
+}
+#screen-onboarding .glass-card {
+  animation: fadeUp 0.6s var(--ease-out) both;
+}
+#screen-onboarding .glass-card:nth-child(1) { animation-delay: 0.45s; }
+#screen-onboarding .glass-card:nth-child(2) { animation-delay: 0.55s; }
+#screen-onboarding .big-btn { animation: fadeUp 0.6s var(--ease-out) 0.65s both; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── REVIEWS ── */
+.reviews-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.reviews-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.reviews-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 700;
+  color: #fff; letter-spacing: -0.01em;
+}
+.reviews-avg {
+  display: flex; align-items: center; gap: 6px;
+}
+.reviews-avg-score {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.reviews-stars {
+  display: flex; gap: 2px;
+}
+.reviews-stars svg {
+  width: 13px; height: 13px;
+}
+.reviews-avg-count {
+  font-size: 12px; color: var(--text-dim);
+  margin-top: 1px;
+}
+
+.review-card {
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: border-color 0.2s;
+  animation: cardIn 0.4s var(--ease-out) both;
+}
+.review-card:hover { border-color: rgba(255,255,255,0.12); }
+.review-card-top {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.review-author-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.review-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(124,77,255,0.5), rgba(68,138,255,0.4));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.review-author {
+  font-size: 13px; font-weight: 600; color: #fff;
+}
+.review-date {
+  font-size: 11px; color: var(--text-dim);
+}
+.review-rating-row {
+  display: flex; gap: 2px; margin-bottom: 6px;
+}
+.review-rating-row svg {
+  width: 12px; height: 12px;
+}
+.review-title {
+  font-size: 13px; font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.review-subtitle {
+  font-size: 12px; color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* ── WIP ── */
+.wip-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: rgba(251,191,36,0.12);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-radius: 999px;
+  font-size: 13px;
+  color: #fbbf24;
+  margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="blob b4"></div>
+  <div class="blob b5"></div>
+</div>
+<!-- ==================== ОНБОРДИНГ ==================== -->
+<div class="screen active" id="screen-onboarding">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:32px 24px;">
+    <div style="font-size:52px;margin-bottom:20px;">👋</div>
+    <h1 style="font-size:26px;font-weight:700;color:#fff;margin-bottom:8px;text-align:center;">Добро пожаловать!</h1>
+    <p style="font-size:15px;color:var(--text-muted);text-align:center;margin-bottom:40px;line-height:1.6;">Укажите ваше имя и никнейм,<br>чтобы продолжить</p>
+
+    <div style="width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px;">
+      <div class="glass-card" style="padding:16px 18px;">
+        <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:8px;">Имя</label>
+        <input class="order-input" id="onbName" placeholder="Например: Никита" maxlength="32">
+      </div>
+      <div class="glass-card" style="padding:16px 18px;">
+        <label style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:8px;">Никнейм</label>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="color:var(--accent);font-size:15px;font-weight:600;">@</span>
+          <input class="order-input" id="onbNick" placeholder="ferniex" maxlength="24" style="text-transform:lowercase;">
+        </div>
+      </div>
+      <div id="onbError" style="font-size:13px;color:#f87171;text-align:center;min-height:18px;"></div>
+      <button class="big-btn" onclick="submitOnboarding()" style="margin-top:4px;">Начать →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ГЛАВНАЯ ==================== -->
+<div class="screen" id="screen-home">
+  <div class="screen-header">
+    <h1>Привет, Никита</h1>
+  </div>
+
+  <!-- ТАБ-переключатель -->
+  <div style="padding: 0 16px 16px; flex-shrink:0;">
+    <div class="tab-bar" id="mainTabBar">
+      <div class="tab-slider" id="mainTabSlider"></div>
+      <button class="tab-btn" onclick="switchTab(0)" id="tab0">Понравившиеся</button>
+      <button class="tab-btn active" onclick="switchTab(1)" id="tab1">Рекомендации</button>
+    </div>
+  </div>
+
+  <!-- Понравившиеся -->
+  <div id="favPanel" class="scroll-area" style="display:none;">
+    <div style="padding-top:40px; text-align:center;">
+      <div style="font-size:44px;margin-bottom:12px;">🔖</div>
+      <div style="font-size:18px;font-weight:600;color:#fff;margin-bottom:8px;">В разработке</div>
+      <div class="wip-badge">Скоро появится</div>
+    </div>
+  </div>
+
+  <!-- Рекомендации -->
+  <div id="recPanel" class="scroll-area">
+    <div id="recList"></div>
+  </div>
+</div>
+
+<!-- ==================== ПОИСК ==================== -->
+<div class="screen" id="screen-search">
+  <div class="screen-header"><h1>Поиск</h1></div>
+  <div class="scroll-area" style="padding-top:10px;">
+    <div class="glass-card" style="padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      <input style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:15px;font-family:inherit;" placeholder="Поиск услуг...">
+    </div>
+    <div style="text-align:center;color:var(--text-muted);font-size:14px;padding:40px 0;">Начните вводить запрос</div>
+  </div>
+</div>
+
+<!-- ==================== ПРОФИЛЬ ==================== -->
+<div class="screen" id="screen-profile">
+  <div class="screen-header"><h1>Профиль</h1></div>
+  <div class="scroll-area" style="padding-top:10px;">
+    <div style="margin-bottom:28px;">
+      <div class="profile-avatar">Н</div>
+      <div class="profile-name">Никита Фернов</div>
+      <div class="profile-nick">@ferniex</div>
+    </div>
+
+    <div class="glass-card" style="padding:8px 12px;margin-bottom:16px;">
+      <div class="profile-row" onclick="showOrders()" style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div class="profile-row-icon" style="background:linear-gradient(135deg,rgba(124,77,255,0.3),rgba(68,138,255,0.3));">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        </div>
+        <div class="profile-row-text">
+          <div class="profile-row-label">Мои заказы</div>
+          <div class="profile-row-sub">3 заказа</div>
+        </div>
+        <div class="profile-row-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="profile-row">
+        <div class="profile-row-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.25),rgba(5,150,105,0.25));">
+          <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        </div>
+        <div class="profile-row-text">
+          <div class="profile-row-label">Избранное</div>
+          <div class="profile-row-sub">В разработке</div>
+        </div>
+        <div class="profile-row-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="padding:8px 12px;">
+      <div class="profile-row">
+        <div class="profile-row-icon" style="background:rgba(255,255,255,0.08);">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="profile-row-text">
+          <div class="profile-row-label">Настройки</div>
+          <div class="profile-row-sub">Аккаунт и безопасность</div>
+        </div>
+        <div class="profile-row-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ДЕТАЛЬНАЯ СТРАНИЦА ==================== -->
+<div class="screen" id="screen-detail">
+  <!-- шапка с кнопкой назад -->
+  <div class="detail-topbar">
+    <div class="back-btn" onclick="goBack('screen-home')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <span class="detail-topbar-title" id="detailTitle"></span>
+  </div>
+
+  <div class="scroll-area" style="padding-top:12px;">
+
+    <!-- ── marketplace layout ── -->
+    <div class="detail-marketplace">
+
+      <!-- миниатюры слева -->
+      <div class="detail-thumbs" id="detailThumbs"></div>
+
+      <!-- большое фото по центру -->
+      <div class="detail-main-photo" id="detailPhotos">
+        <div class="photo-nav prev" onclick="changeDetailPhoto(-1)">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <div class="photo-nav next" onclick="changeDetailPhoto(1)">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="photo-dots" id="detailDots"></div>
+      </div>
+
+      <!-- инфо справа -->
+      <div class="detail-side">
+        <div class="detail-price" id="detailPrice"></div>
+        <div class="detail-desc-text" id="detailDesc"></div>
+
+        <div style="margin-top:10px;">
+          <div class="section-label" style="margin-bottom:6px;">Количество часов</div>
+          <div class="hours-slider-wrap">
+          <div class="hours-slider-track">
+            <div class="hours-slider-bg">
+            <div class="hours-slider-fill" id="fillDetail"></div>
+          </div>
+          <div class="slider-thumb" id="thumbDetail"></div>
+          <input type="range" class="hours-slider" min="1" max="12" value="2" id="hoursSliderDetail" oninput="updateDetailHours()">
+          </div>
+          <div class="hours-val"><span id="hoursValDetail">2</span>ч</div>
+        </div>
+        </div>
+
+        <div class="detail-total-row" style="margin-top:10px;">
+          <span style="font-size:12px;color:var(--text-muted);">Итого</span>
+          <span class="detail-total-val" id="detailTotal">0 ₽</span>
+        </div>
+
+        <div class="section-label" style="margin-top:16px;margin-bottom:8px;">Выберите услугу</div>
+        <div class="services-grid" id="servicesGrid"></div>
+
+        <button class="big-btn" onclick="openOrder()" id="orderBtn" disabled style="margin-top:12px;">Оформить заказ</button>
+      </div>
+    </div>
+
+    <!-- ── ОТЗЫВЫ ── -->
+    <div class="reviews-section" id="reviewsSection"></div>
+
+  </div>
+</div>
+
+<!-- ==================== ОФОРМЛЕНИЕ ЗАКАЗА ==================== -->
+<div class="screen" id="screen-order">
+  <div class="screen-header">
+    <div class="back-btn" onclick="goBack('screen-detail')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <h1>Оформление</h1>
+  </div>
+  <div class="scroll-area" style="padding-top:4px;">
+    <div class="glass-card order-field" style="margin-bottom:14px;">
+      <label>Выбранная услуга</label>
+      <div class="field-value" id="orderService" style="color:var(--accent);font-weight:500;"></div>
+    </div>
+
+    <div class="glass-card order-field" style="margin-bottom:14px;">
+      <label>Адрес</label>
+      <input class="order-input" id="orderAddress" placeholder="Введите адрес...">
+    </div>
+
+    <div class="glass-card order-field" style="margin-bottom:14px;">
+      <label>Количество часов</label>
+      <div class="hours-slider-wrap">
+        <div class="hours-slider-track">
+          <div class="hours-slider-bg">
+            <div class="hours-slider-fill" id="fillOrder"></div>
+          </div>
+          <div class="slider-thumb" id="thumbOrder"></div>
+          <input type="range" class="hours-slider" min="1" max="12" value="2" id="hoursSlider" oninput="updateHours()">
+        </div>
+        <div class="hours-val"><span id="hoursVal">2</span>ч</div>
+      </div>
+    </div>
+
+    <div class="glass-card total-row">
+      <div class="total-label">Итого к оплате</div>
+      <div class="total-val" id="totalPrice">0 ₽</div>
+    </div>
+
+    <button class="big-btn" onclick="submitOrder()">Оформить</button>
+  </div>
+</div>
+
+<!-- ==================== ЗАКАЗЫ ==================== -->
+<div class="screen" id="screen-orders">
+  <div class="screen-header">
+    <div class="back-btn" onclick="goBack('screen-profile')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <h1>Мои заказы</h1>
+  </div>
+  <div class="scroll-area" style="padding-top:4px;">
+    <div id="ordersList"></div>
+  </div>
+</div>
+
+<!-- ==================== NAVBAR ==================== -->
+<div class="navbar-wrap">
+  <nav class="navbar" id="navbar">
+    <div class="nav-slider" id="navSlider"></div>
+    <button class="nav-btn active" onclick="switchScreen('screen-home', this, 0)" aria-label="Главная">
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15.5C15 14.67 14.33 14 13.5 14H10.5C9.67 14 9 14.67 9 15.5V21H4C3.45 21 3 20.55 3 20V10.5Z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="nav-label">Главная</span>
+    </button>
+    <button class="nav-btn" onclick="switchScreen('screen-search', this, 1)" aria-label="Поиск">
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round"/></svg></div>
+      <span class="nav-label">Поиск</span>
+    </button>
+    <button class="nav-btn" onclick="switchScreen('screen-profile', this, 2)" aria-label="Профиль">
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20C4 16.686 7.582 14 12 14C16.418 14 20 16.686 20 20" stroke-linecap="round"/></svg></div>
+      <span class="nav-label">Профиль</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ==================== МОДАЛКИ ==================== -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-box">
+    <div class="modal-icon">✓</div>
+    <div class="modal-title">Заказ оформлен!</div>
+    <div class="modal-sub">Ваш заказ принят в обработку. Мастер свяжется с вами в ближайшее время.</div>
+    <button class="big-btn" onclick="closeSuccess()">Отлично!</button>
+  </div>
+</div>
+
+<div class="order-detail-panel" id="orderDetailPanel" onclick="closeOrderDetail(event)">
+  <div class="order-detail-sheet" id="orderDetailSheet">
+    <div class="sheet-handle"></div>
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:20px;" id="odTitle"></h3>
+    <div id="odRows"></div>
+  </div>
+</div>
+
+<script>
+// ============ ONBOARDING ============
+const LS_USER = 'ferniex_user';
+
+function loadUser() {
+  try { return JSON.parse(localStorage.getItem(LS_USER)) || null; } catch { return null; }
+}
+function saveUser(u) {
+  localStorage.setItem(LS_USER, JSON.stringify(u));
+}
+
+document.getElementById('onbNick').addEventListener('input', function() {
+  this.value = this.value.toLowerCase().replace(/[^a-zа-яё0-9_]/gi, '');
+});
+
+function submitOnboarding() {
+  const name = document.getElementById('onbName').value.trim();
+  const nick = document.getElementById('onbNick').value.trim().toLowerCase().replace(/[^a-zа-яё0-9_]/gi, '');
+  const err = document.getElementById('onbError');
+  if (!name) { err.textContent = 'Введите имя'; return; }
+  if (nick.length < 2) { err.textContent = 'Никнейм минимум 2 символа'; return; }
+  err.textContent = '';
+  saveUser({ name, nick });
+  applyUser({ name, nick });
+  document.getElementById('screen-onboarding').classList.remove('active');
+  document.getElementById('screen-home').classList.add('active');
+}
+
+function applyUser(u) {
+  // приветствие
+  const h1 = document.querySelector('#screen-home .screen-header h1');
+  if (h1) h1.textContent = `Привет, ${u.name}`;
+  // профиль
+  const pname = document.querySelector('.profile-name');
+  if (pname) pname.textContent = u.name;
+  const pnick = document.querySelector('.profile-nick');
+  if (pnick) pnick.textContent = `@${u.nick}`;
+  // аватар (первая буква)
+  const av = document.querySelector('.profile-avatar');
+  if (av) av.textContent = u.name.charAt(0).toUpperCase();
+}
+
+// ============ DATA & LOCALSTORAGE ============
+const LS_KEY = 'ferniex_orders';
+let data = { recommendations: [] };
+
+const statusLabels = { done: "Выполнен", progress: "В работе", pending: "Ожидает", cancelled: "Отменён" };
+const statusClasses = { done: "status-done", progress: "status-progress", pending: "status-pending", cancelled: "status-cancelled" };
+
+function loadOrders() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch { return []; }
+}
+function saveOrders(orders) {
+  localStorage.setItem(LS_KEY, JSON.stringify(orders));
+}
+function genId() {
+  return 'ORD-' + Date.now().toString(36).toUpperCase();
+}
+function pluralOrders(n) {
+  if (n % 10 === 1 && n % 100 !== 11) return 'заказ';
+  if ([2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100)) return 'заказа';
+  return 'заказов';
+}
+function fmtDate(ts) {
+  return new Date(ts).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// ============ STATE ============
+let currentItem = null;
+let selectedService = null;
+let detailPhotoIdx = 0;
+let recPhotoIdxMap = {};
+
+// ============ INIT ============
+async function init() {
+  try {
+    const resp = await fetch('data.json');
+    data = await resp.json();
+  } catch(e) {
+    console.warn('data.json не загружен, используем пустой массив', e);
+  }
+
+  const user = loadUser();
+  if (user) {
+    // уже зарегистрирован — пропускаем онбординг
+    applyUser(user);
+    document.getElementById('screen-onboarding').classList.remove('active');
+    document.getElementById('screen-home').classList.add('active');
+  }
+  // иначе онбординг уже активен по умолчанию
+
+  renderRecs();
+  renderOrders();
+  initTabSlider();
+  initNavSlider();
+}
+
+function renderRecs() {
+  const list = document.getElementById('recList');
+  list.innerHTML = data.recommendations.map((item, i) => {
+    recPhotoIdxMap[i] = 0;
+    const dots = item.photos.map((_, j) => `<div class="photo-dot${j===0?' active':''}" id="rdot-${i}-${j}"></div>`).join('');
+    const imgs = item.photos.map((url, j) => `<img src="${url}" class="${j===0?'active':''}" id="rimg-${i}-${j}" onerror="this.style.background='rgba(167,139,250,0.15)';this.src=''" alt="">`).join('');
+    const reviewCount = item.reviews ? item.reviews.length : 0;
+    const avgRating = reviewCount
+      ? (item.reviews.reduce((s, r) => s + (r.rating || 5), 0) / reviewCount).toFixed(1)
+      : null;
+    const ratingHtml = avgRating
+      ? `<div class="rec-rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>${avgRating}</div><div class="rec-reviews-count">${reviewCount} отзыв${reviewCount===1?'':reviewCount<5?'а':'ов'}</div>`
+      : '';
+    return `
+    <div class="rec-card glass-card" style="padding:0;" onclick="openDetail(${i})">
+      <div class="photo-slider">
+        ${imgs}
+        <div class="photo-nav prev" onclick="event.stopPropagation();changeRecPhoto(${i},-1)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+        <div class="photo-nav next" onclick="event.stopPropagation();changeRecPhoto(${i},1)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="photo-dots">${dots}</div>
+      </div>
+      <div class="rec-info">
+        <div class="rec-title">${item.title}</div>
+        <div class="rec-desc">${item.desc.substring(0, 120)}</div>
+        <div class="rec-meta">${ratingHtml}</div>
+        <div class="rec-price-row">
+          <div class="rec-price">${item.priceLabel}</div>
+          <div class="rec-badge">${item.badge}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function changeRecPhoto(cardIdx, dir) {
+  const item = data.recommendations[cardIdx];
+  const cur = recPhotoIdxMap[cardIdx];
+  const next = (cur + dir + item.photos.length) % item.photos.length;
+  document.getElementById(`rimg-${cardIdx}-${cur}`).classList.remove('active');
+  document.getElementById(`rimg-${cardIdx}-${next}`).classList.add('active');
+  document.getElementById(`rdot-${cardIdx}-${cur}`).classList.remove('active');
+  document.getElementById(`rdot-${cardIdx}-${next}`).classList.add('active');
+  recPhotoIdxMap[cardIdx] = next;
+}
+
+function renderOrders() {
+  const list = document.getElementById('ordersList');
+  const orders = loadOrders();
+  if (!orders.length) {
+    list.innerHTML = `<div style="text-align:center;padding:60px 0;color:var(--text-muted);">
+      <div style="font-size:40px;margin-bottom:12px;">📋</div>
+      <div style="font-size:16px;font-weight:500;">Заказов пока нет</div>
+    </div>`;
+  } else {
+    list.innerHTML = orders.slice().reverse().map(o => `
+      <div class="glass-card order-item" onclick="openOrderDetail('${o.id}')">
+        <div class="order-item-top">
+          <div class="order-item-title">${o.title}</div>
+          <div class="order-status ${statusClasses[o.status] || 'status-pending'}">${statusLabels[o.status] || o.status}</div>
+        </div>
+        <div class="order-item-info">${o.service} · ${o.hours}ч · ${o.price.toLocaleString('ru')} ₽</div>
+        <div class="order-item-info" style="margin-top:2px;">${fmtDate(o.ts)}</div>
+      </div>`).join('');
+  }
+  // счётчик в профиле
+  const count = orders.length;
+  const sub = document.querySelector('.profile-row-sub');
+  if (sub) sub.textContent = count === 0 ? 'Нет заказов' : `${count} ${pluralOrders(count)}`;
+}
+
+// ============ TABS ============
+function initTabSlider() {
+  setTimeout(() => { switchTab(1); }, 30);
+}
+
+function switchTab(idx) {
+  const bar = document.getElementById('mainTabBar');
+  const slider = document.getElementById('mainTabSlider');
+  const tabs = bar.querySelectorAll('.tab-btn');
+  const fav = document.getElementById('favPanel');
+  const rec = document.getElementById('recPanel');
+  tabs.forEach(t => t.classList.remove('active'));
+  tabs[idx].classList.add('active');
+  const r = bar.getBoundingClientRect();
+  const tr = tabs[idx].getBoundingClientRect();
+  slider.style.left = (tr.left - r.left) + 'px';
+  slider.style.width = tr.width + 'px';
+  if (idx === 0) { fav.style.display = 'block'; rec.style.display = 'none'; }
+  else { fav.style.display = 'none'; rec.style.display = 'block'; }
+}
+
+// ============ NAVBAR ============
+const navBtns = [];
+function initNavSlider() {
+  const btns = document.querySelectorAll('.nav-btn');
+  btns.forEach(b => navBtns.push(b));
+  setTimeout(() => moveNavSlider(btns[0]), 60);
+}
+
+function moveNavSlider(btn) {
+  const navbar = document.getElementById('navbar');
+  const slider = document.getElementById('navSlider');
+  const nr = navbar.getBoundingClientRect();
+  const br = btn.getBoundingClientRect();
+  slider.style.left = (br.left - nr.left) + 'px';
+  slider.style.width = br.width + 'px';
+}
+
+function switchScreen(id, btn, idx) {
+  const prev = document.querySelector('.screen.active');
+  if (prev && prev.id === id) return;
+  if (prev) {
+    prev.style.transition = 'opacity 0.2s, transform 0.2s';
+    prev.style.opacity = '0';
+    prev.style.transform = 'translateY(8px)';
+    setTimeout(() => {
+      prev.classList.remove('active');
+      prev.style.transition = '';
+      prev.style.opacity = '';
+      prev.style.transform = '';
+      document.getElementById(id).classList.add('active');
+    }, 180);
+  } else {
+    document.getElementById(id).classList.add('active');
+  }
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  moveNavSlider(btn);
+}
+
+// ============ DETAIL ============
+function openDetail(idx) {
+  currentItem = data.recommendations[idx];
+  selectedService = null;
+  detailPhotoIdx = 0;
+
+  document.getElementById('detailTitle').textContent = currentItem.title;
+  document.getElementById('detailPrice').textContent = currentItem.priceLabel;
+  document.getElementById('detailDesc').textContent = currentItem.desc;
+
+  // большое фото
+  const photosEl = document.getElementById('detailPhotos');
+  photosEl.querySelectorAll('img').forEach(i => i.remove());
+  currentItem.photos.forEach((url, i) => {
+    const img = document.createElement('img');
+    img.src = url;
+    img.className = i === 0 ? 'active' : '';
+    img.onerror = () => { img.style.background = 'rgba(167,139,250,0.08)'; img.src = ''; };
+    photosEl.insertBefore(img, photosEl.querySelector('.photo-nav'));
+  });
+
+  // dots
+  document.getElementById('detailDots').innerHTML = currentItem.photos.map((_, i) =>
+    `<div class="photo-dot${i===0?' active':''}" id="ddot-${i}"></div>`).join('');
+
+  // миниатюры
+  const thumbsEl = document.getElementById('detailThumbs');
+  thumbsEl.innerHTML = currentItem.photos.map((url, i) => `
+    <div class="detail-thumb${i===0?' active':''}" id="dthumb-${i}" onclick="jumpDetailPhoto(${i})">
+      <img src="${url}" alt="">
+    </div>`).join('');
+
+  // слайдер часов
+  const slider = document.getElementById('hoursSliderDetail');
+  slider.value = 2;
+  updateDetailHours();
+
+  // услуги
+  document.getElementById('servicesGrid').innerHTML = currentItem.services.map(s =>
+    `<div class="service-chip" onclick="selectService(this,'${s}')">${s}</div>`).join('');
+
+  document.getElementById('orderBtn').disabled = true;
+  renderReviews(currentItem);
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-detail').classList.add('active');
+}
+
+function renderStars(rating, filled = '#fbbf24', empty = 'rgba(255,255,255,0.18)') {
+  return Array.from({ length: 5 }, (_, i) =>
+    `<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="${i < rating ? filled : empty}" stroke="none"/></svg>`
+  ).join('');
+}
+
+function renderReviews(item) {
+  const section = document.getElementById('reviewsSection');
+  if (!item.reviews || !item.reviews.length) {
+    section.innerHTML = '';
+    return;
+  }
+  const count = item.reviews.length;
+  const avg = (item.reviews.reduce((s, r) => s + (r.rating || 5), 0) / count);
+  const avgDisplay = avg.toFixed(1);
+
+  section.innerHTML = `
+    <div class="reviews-header">
+      <div>
+        <div class="reviews-title">Отзывы</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:2px;">${count} отзыв${count===1?'':count<5?'а':'ов'}</div>
+      </div>
+      <div class="reviews-avg">
+        <div>
+          <div class="reviews-avg-score">${avgDisplay}</div>
+          <div class="reviews-stars">${renderStars(Math.round(avg))}</div>
+        </div>
+      </div>
+    </div>
+    ${item.reviews.map((r, i) => `
+      <div class="review-card" style="animation-delay:${0.05 + i * 0.07}s;">
+        <div class="review-card-top">
+          <div class="review-author-row">
+            <div class="review-avatar">${r.name.charAt(0)}</div>
+            <div class="review-author">${r.name}</div>
+          </div>
+          <div class="review-date">${r.date}</div>
+        </div>
+        <div class="review-rating-row">${renderStars(r.rating || 5)}</div>
+        <div class="review-title">${r.title}</div>
+        <div class="review-subtitle">${r.subtitle}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function fillSlider(slider) {
+  const min = +slider.min || 1;
+  const max = +slider.max || 12;
+  const val = +slider.value;
+  const pct = ((val - min) / (max - min)) * 100;
+
+  const isDetail = slider.id === 'hoursSliderDetail';
+  const fillId = isDetail ? 'fillDetail' : 'fillOrder';
+  const thumbId = isDetail ? 'thumbDetail' : 'thumbOrder';
+
+  const fill = document.getElementById(fillId);
+  if (fill) fill.style.width = pct + '%';
+
+  const thumb = document.getElementById(thumbId);
+  if (thumb) thumb.style.left = pct + '%';
+}
+
+function updateDetailHours() {
+  const slider = document.getElementById('hoursSliderDetail');
+  const h = parseInt(slider.value);
+  fillSlider(slider);
+  document.getElementById('hoursValDetail').textContent = h;
+  document.getElementById('detailTotal').textContent =
+    (h * (currentItem ? currentItem.price : 0)).toLocaleString('ru') + ' ₽';
+}
+
+function jumpDetailPhoto(idx) {
+  const photos = document.querySelectorAll('#detailPhotos img');
+  if (!photos.length) return;
+  photos[detailPhotoIdx].classList.remove('active');
+  const od = document.getElementById(`ddot-${detailPhotoIdx}`);
+  if (od) od.classList.remove('active');
+  const ot = document.getElementById(`dthumb-${detailPhotoIdx}`);
+  if (ot) ot.classList.remove('active');
+  detailPhotoIdx = idx;
+  photos[detailPhotoIdx].classList.add('active');
+  const nd = document.getElementById(`ddot-${detailPhotoIdx}`);
+  if (nd) nd.classList.add('active');
+  const nt = document.getElementById(`dthumb-${detailPhotoIdx}`);
+  if (nt) nt.classList.add('active');
+}
+
+function changeDetailPhoto(dir) {
+  const photos = document.querySelectorAll('#detailPhotos img');
+  if (!photos.length) return;
+  const prevIdx = detailPhotoIdx;
+  detailPhotoIdx = (detailPhotoIdx + dir + photos.length) % photos.length;
+  photos[prevIdx].classList.remove('active');
+  document.getElementById(`ddot-${prevIdx}`)?.classList.remove('active');
+  document.getElementById(`dthumb-${prevIdx}`)?.classList.remove('active');
+  photos[detailPhotoIdx].classList.add('active');
+  document.getElementById(`ddot-${detailPhotoIdx}`)?.classList.add('active');
+  document.getElementById(`dthumb-${detailPhotoIdx}`)?.classList.add('active');
+}
+
+function selectService(el, name) {
+  document.querySelectorAll('.service-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedService = name;
+  document.getElementById('orderBtn').disabled = false;
+}
+
+// ============ ORDER ============
+function openOrder() {
+  document.getElementById('orderService').textContent = selectedService;
+  document.getElementById('orderAddress').value = '';
+  const h = parseInt(document.getElementById('hoursSliderDetail').value) || 2;
+  document.getElementById('hoursSlider').value = h;
+  updateHours();
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-order').classList.add('active');
+}
+
+function updateHours() {
+  const slider = document.getElementById('hoursSlider');
+  const h = parseInt(slider.value);
+  fillSlider(slider);
+  document.getElementById('hoursVal').textContent = h;
+  const total = h * (currentItem ? currentItem.price : 0);
+  document.getElementById('totalPrice').textContent = total.toLocaleString('ru') + ' ₽';
+}
+
+function submitOrder() {
+  const address = document.getElementById('orderAddress').value.trim();
+  if (!address) {
+    document.getElementById('orderAddress').focus();
+    document.getElementById('orderAddress').style.outline = '1px solid rgba(251,113,133,0.7)';
+    setTimeout(() => document.getElementById('orderAddress').style.outline = '', 1500);
+    return;
+  }
+  const hours = parseInt(document.getElementById('hoursSlider').value);
+  const order = {
+    id: genId(),
+    title: currentItem.title,
+    service: selectedService,
+    address,
+    hours,
+    price: hours * currentItem.price,
+    status: 'pending',
+    master: 'Назначается',
+    phone: '—',
+    ts: Date.now()
+  };
+  const orders = loadOrders();
+  orders.push(order);
+  saveOrders(orders);
+  renderOrders();
+  document.getElementById('successModal').classList.add('show');
+}
+
+function closeSuccess() {
+  document.getElementById('successModal').classList.remove('show');
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-home').classList.add('active');
+}
+
+// ============ ORDERS LIST ============
+function showOrders() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-orders').classList.add('active');
+}
+
+function openOrderDetail(id) {
+  const o = loadOrders().find(x => x.id === id);
+  if (!o) return;
+  const canCancel = o.status === 'pending';
+  document.getElementById('odTitle').textContent = o.title;
+  document.getElementById('odRows').innerHTML = `
+    <div class="detail-row"><span class="detail-row-label">Номер заказа</span><span class="detail-row-val">${o.id}</span></div>
+    <div class="detail-row"><span class="detail-row-label">Услуга</span><span class="detail-row-val">${o.service}</span></div>
+    <div class="detail-row"><span class="detail-row-label">Статус</span><span class="detail-row-val"><span class="order-status ${statusClasses[o.status] || 'status-pending'}">${statusLabels[o.status] || o.status}</span></span></div>
+    <div class="detail-row"><span class="detail-row-label">Адрес</span><span class="detail-row-val">${o.address}</span></div>
+    <div class="detail-row"><span class="detail-row-label">Длительность</span><span class="detail-row-val">${o.hours} ч</span></div>
+    <div class="detail-row"><span class="detail-row-label">Дата</span><span class="detail-row-val">${fmtDate(o.ts)}</span></div>
+    <div class="detail-row"><span class="detail-row-label">Сумма</span><span class="detail-row-val" style="color:var(--accent);font-weight:600;">${o.price.toLocaleString('ru')} ₽</span></div>
+    <div class="detail-row"><span class="detail-row-label">Мастер</span><span class="detail-row-val">${o.master}</span></div>
+    <div class="detail-row"><span class="detail-row-label">Телефон мастера</span><span class="detail-row-val">${o.phone !== '—' ? `<a href="tel:${o.phone}" class="phone-link">${o.phone}</a>` : '—'}</span></div>
+    ${canCancel ? `<div style="margin-top:20px;">
+      <button class="big-btn" style="background:linear-gradient(135deg,#b91c1c,#dc2626);box-shadow:0 8px 24px rgba(220,38,38,0.35);" onclick="cancelOrder('${o.id}')">Отменить заказ</button>
+    </div>` : ''}
+  `;
+  document.getElementById('orderDetailPanel').classList.add('show');
+}
+
+function cancelOrder(id) {
+  const orders = loadOrders();
+  const idx = orders.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  orders[idx].status = 'cancelled';
+  saveOrders(orders);
+  document.getElementById('orderDetailPanel').classList.remove('show');
+  renderOrders();
+}
+
+function closeOrderDetail(e) {
+  if (e.target === document.getElementById('orderDetailPanel')) {
+    document.getElementById('orderDetailPanel').classList.remove('show');
+  }
+}
+
+// ============ NAVIGATION ============
+function goBack(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+}
+
+init();
+</script>
+</body>
+</html>
